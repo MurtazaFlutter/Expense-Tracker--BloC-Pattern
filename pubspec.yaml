@@ -40,6 +40,7 @@ dependencies:
   firebase_core: ^2.24.2
   riverpod: ^2.4.9
   gap: ^3.0.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

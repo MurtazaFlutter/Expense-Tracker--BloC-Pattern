@@ -1,31 +1,31 @@
+import 'package:expense_tracker/views/add/views/add_expenses.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
 import '../widgets/expense_tracker.dart';
 import '../widgets/tracker.dart';
 
-class Expenses extends StatefulWidget {
-  const Expenses({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
-  @override
-  State<Expenses> createState() => _ExpensesState();
-}
-
-class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
             const Gap(20),
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AddExpensesScreen()));
+                  },
                   icon: const Icon(Icons.add),
                   label: const Text("Add")),
             ),
@@ -39,13 +39,16 @@ class _ExpensesState extends State<Expenses> {
                       PieChartData(sections: [
                         PieChartSectionData(radius: 70, color: Colors.red),
                         PieChartSectionData(radius: 70, color: Colors.teal),
-                        PieChartSectionData(radius: 70, color: Colors.grey),
+                        PieChartSectionData(
+                            radius: 70, color: Colors.grey.shade100),
                       ]),
                     ),
                   ),
                 ),
                 const Gap(30),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const TrackerWidget(
                       title: 'Expense',
@@ -59,7 +62,7 @@ class _ExpensesState extends State<Expenses> {
                     const Gap(10),
                     TrackerWidget(
                       title: 'Saving',
-                      color: Colors.grey.shade200,
+                      color: Colors.grey.shade100,
                     ),
                   ],
                 )
