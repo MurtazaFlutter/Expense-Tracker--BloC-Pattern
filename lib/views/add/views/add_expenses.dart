@@ -1,6 +1,5 @@
+import 'package:expense_tracker/bloc/bloc/add_expense_bloc.dart';
 import 'package:expense_tracker/common/utils/app_consts.dart';
-import 'package:expense_tracker/cubit/add_expense/add_expense_state.dart';
-import 'package:expense_tracker/cubit/add_expense/expense_cubit.dart';
 import 'package:expense_tracker/models/expense_model.dart';
 import 'package:expense_tracker/views/add/widgets/dialer_button.dart';
 import 'package:expense_tracker/views/add/widgets/expense.dart';
@@ -21,12 +20,12 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   final TextEditingController description = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   String? categoryValue;
-  late AddExpenseCubit _addExpenseCubit;
+  late AddExpenseBloc _addExpenseCubit;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    _addExpenseCubit = AddExpenseCubit();
+    // _addExpenseCubit = AddExpenseBloc();
     super.initState();
   }
 
@@ -41,32 +40,33 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
       final expense = ExpenseModel(title.text, description.text, categoryValue!,
           DateTime.now(), TimeOfDay.now(), amountController.text);
 
-      _addExpenseCubit.submitExpense(expense);
+      context.read<AddExpenseBloc>().add(AddExpenseEventWithModel(expense));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddExpenseCubit, AddExpenseState>(
+    return BlocBuilder<AddExpenseBloc, AddExpenseState>(
         builder: (context, state) {
-      if (state is AddExpenseLoadingState) {
+      if (state is AddExpenseLoading) {
         return const Center(
           child: CircularProgressIndicator(),
         );
       }
-      if (state is AddExpenseErrorState) {
+      if (state is AddExpenseError) {
         return Center(child: Text(state.error));
         // ScaffoldMessenger.of(context)
         //     .showSnackBar(SnackBar(content: Text(state.error)));
       }
-      if (state is AddExpenseSuccessState) {
-        return Center(child: Text(state.success));
+      if (state is AddExpenseSuccess) {
+        const Text("success");
+        //  return Center(child: Text(state));
       }
 
       return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: submit,
-          child: const Icon(Icons.clear),
+          child: const Icon(Icons.add),
         ),
         appBar: AppBar(),
         body: SafeArea(

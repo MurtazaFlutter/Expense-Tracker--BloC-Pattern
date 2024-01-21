@@ -28,6 +28,7 @@ class ExpenseTracker extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 50,
@@ -45,10 +46,13 @@ class ExpenseTracker extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(category),
-                Text(description),
+                Text(
+                  description,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const Gap(4),
                 Text(
-                  "${date.toLocal()}",
+                  date.toString(),
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,

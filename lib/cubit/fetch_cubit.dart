@@ -24,13 +24,18 @@ class ExpenseListErrorState extends ExpenseListState {
   ExpenseListErrorState(this.error);
 }
 
-// Cubit
-class ExpenseListCubit extends Cubit<ExpenseListState> {
+// Bloc
+class ExpenseListBloc extends Bloc<ExpenseListEvent, ExpenseListState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  ExpenseListCubit() : super(ExpenseListLoadingState());
+  ExpenseListBloc() : super(ExpenseListLoadingState()) {
+    on<FetchExpenseListEvent>(_fetchExpenses);
+  }
 
-  void fetchExpenses() async {
+  void _fetchExpenses(
+    FetchExpenseListEvent event,
+    Emitter<ExpenseListState> emit,
+  ) async {
     try {
       print("Fetching expenses...");
       final snapshot = await _firestore.collection('expenses').get();
@@ -39,7 +44,12 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       final expenses = snapshot.docs
           .map((doc) => ExpenseModel.fromJson(doc.data()))
           .toList();
+
       print("Fetched expenses: $expenses");
+
+      for (var expense in expenses) {
+        print("Amount: ${expense.amount}");
+      }
 
       emit(ExpenseListLoadedState(expenses));
     } catch (e) {

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/cubit/fetch_cubit.dart';
+import 'package:expense_tracker/bloc/expenses_bloc.dart';
 import 'package:expense_tracker/views/add/views/add_expenses.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +15,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final expenseListCubit = ExpenseListCubit();
-
   @override
   void initState() {
-    expenseListCubit.fetchExpenses();
+    context.read<ExpensesBloc>().add(ExpensesFetched());
     super.initState();
   }
 
@@ -48,32 +46,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Gap(20),
-              BlocBuilder<ExpenseListCubit, ExpenseListState>(
+              BlocBuilder<ExpensesBloc, ExpensesState>(
                 builder: (context, state) {
-                  print("state $state");
-                  if (state is ExpenseListLoadingState) {
-                    print("loading state $state");
+                  if (state is ExpenseLoading) {
                     return const CircularProgressIndicator();
-                  } else if (state is ExpenseListLoadedState) {
-                    print("Loaded state, expenses: ${state.expenses.length}");
+                  } else if (state is ExpenseSuccess) {
                     return Column(
                       children: [
                         Row(
                           children: [
-                            SizedBox(
-                              height: 200,
+                            Expanded(
                               child: AspectRatio(
                                 aspectRatio: 1,
                                 child: PieChart(
-                                  // Update PieChart data with state.expenses
                                   PieChartData(
-                                    sections: state.expenses
+                                    sections: state.expenseModel
                                         .map(
                                           (expense) => PieChartSectionData(
                                             radius: 70,
                                             color: Colors.red,
                                             value: double.parse(expense.amount),
-                                            title: expense.amount.toString(),
+                                            title: '\$${expense.amount}',
                                           ),
                                         )
                                         .toList(),
@@ -85,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: state.expenses
+                              children: state.expenseModel
                                   .map(
                                     (expense) => Column(
                                       children: [
@@ -102,33 +95,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const Gap(20),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: state.expenses.length,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              final expense = state.expenses[index];
-                              print("data: $expense");
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ExpenseTracker(
-                                  category: expense.categoryType,
-                                  description: expense.description,
-                                  date: expense.date,
-                                  amount: double.parse(expense.amount),
-                                ),
-                              );
-                            },
-                          ),
+                        ListView.builder(
+                          itemCount: state.expenseModel.length,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, index) {
+                            final expense = state.expenseModel[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ExpenseTracker(
+                                category: expense.categoryType,
+                                description: expense.description,
+                                date: expense.date,
+                                amount: double.parse(expense.amount),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     );
-                  } else if (state is ExpenseListErrorState) {
-                    print("Error state: ${state.error}");
+                  } else if (state is ExpenseFailure) {
                     return Text('Error: ${state.error}');
                   } else {
-                    print("Unknown state");
                     return Container();
                   }
                 },
