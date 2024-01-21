@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-class ExpenseFlow extends StatefulWidget {
+class DateTimePicker extends StatefulWidget {
   final IconData icon;
   final String title;
   final VoidCallback onTap;
 
-  const ExpenseFlow({
+  const DateTimePicker({
     Key? key,
     required this.onTap,
     required this.icon,
@@ -20,7 +20,7 @@ class ExpenseFlow extends StatefulWidget {
   ExpenseFlowState createState() => ExpenseFlowState();
 }
 
-class ExpenseFlowState extends State<ExpenseFlow> {
+class ExpenseFlowState extends State<DateTimePicker> {
   late DateTimeCubit _dateTimeCubit;
 
   @override

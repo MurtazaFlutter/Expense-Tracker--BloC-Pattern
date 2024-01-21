@@ -2,23 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class ExpenseTracker extends StatelessWidget {
+  final String category;
+  final String description;
+  final DateTime date;
+  final double amount;
+
   const ExpenseTracker({
-    super.key,
-  });
+    Key? key,
+    required this.category,
+    required this.description,
+    required this.date,
+    required this.amount,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 4,
-        color: Colors.white,
-        shadowColor: Colors.grey.shade300,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      elevation: 4,
+      color: Colors.white,
+      shadowColor: Colors.grey.shade300,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Container(
               height: 50,
               width: 50,
@@ -34,13 +44,11 @@ class ExpenseTracker extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Salary Deposit"),
-                const Text(
-                  "My office salary has been \ndeposited for the month of July",
-                ),
+                Text(category),
+                Text(description),
                 const Gap(4),
                 Text(
-                  "${DateTime.now().toLocal()}",
+                  "${date.toLocal()}",
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
@@ -48,8 +56,10 @@ class ExpenseTracker extends StatelessWidget {
                 ),
               ],
             ),
-            const Text("20,0000"),
-          ]),
-        ));
+            Text(amount.toString()),
+          ],
+        ),
+      ),
+    );
   }
 }
