@@ -1,16 +1,13 @@
 import 'package:expense_tracker/bloc/bloc/add_expense_bloc.dart';
 import 'package:expense_tracker/bloc/expenses_bloc.dart';
 import 'package:expense_tracker/cubit/date_time_cubit.dart';
-import 'package:expense_tracker/data/add_expense/add_expense_provider.dart';
-import 'package:expense_tracker/data/get_expense/data_provider/expense_data_provider.dart';
-import 'package:expense_tracker/data/get_expense/repository/expenses_repository.dart';
+import 'package:expense_tracker/data/data_provider/expense_data_provider.dart';
+import 'package:expense_tracker/data/repository/expense_repository.dart';
 import 'package:expense_tracker/firebase_options.dart';
 import 'package:expense_tracker/views/home/views/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'data/add_expense/add_repository/add_expense_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,10 +23,10 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (context) => ExpensesRepository(ExpensesDataProvider()),
+          create: (context) => ExpenseRepository(ExpenseDataProvider()),
         ),
         RepositoryProvider(
-          create: (context) => AddExpenseRepository(AddExpenseDataProvider()),
+          create: (context) => ExpenseRepository(ExpenseDataProvider()),
         ),
       ],
       child: MultiBlocProvider(
@@ -39,11 +36,11 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) =>
-                ExpensesBloc(context.read<ExpensesRepository>()),
+                ExpensesBloc(context.read<ExpenseRepository>()),
           ),
           BlocProvider(
             create: (context) =>
-                AddExpenseBloc(context.read<AddExpenseRepository>()),
+                AddExpenseBloc(context.read<ExpenseRepository>()),
           ),
         ],
         child: MaterialApp(

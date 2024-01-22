@@ -18,3 +18,19 @@ final class ExpenseFailure extends ExpensesState {
 }
 
 final class ExpenseLoading extends ExpensesState {}
+
+// final class AddExpenseInitial extends ExpensesState {}
+
+// class AddExpenseSuccess extends ExpensesState {
+//   final ExpenseModel expenseModel;
+
+//   AddExpenseSuccess({required this.expenseModel});
+// }
+
+// class AddExpenseError extends ExpensesState {
+//   final String error;
+
+//   AddExpenseError(this.error);
+// }
+
+// class AddExpenseLoading extends AddExpenseState {}

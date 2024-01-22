@@ -1,66 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 class ExpenseTracker extends StatelessWidget {
-  final String category;
+  final String title;
   final String description;
+  final String category;
   final DateTime date;
-  final double amount;
+  final String amount;
 
-  const ExpenseTracker({
-    Key? key,
-    required this.category,
-    required this.description,
-    required this.date,
-    required this.amount,
-  }) : super(key: key);
+  const ExpenseTracker(
+      {Key? key,
+      required this.title,
+      required this.description,
+      required this.date,
+      required this.amount,
+      required this.category})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Determine arrow icon and color based on income or expense
+    IconData icon;
+    Color iconColor;
+    if (category == 'Income') {
+      icon = Icons.arrow_forward;
+      iconColor = Colors.teal;
+    } else if (category == 'Expense') {
+      icon = Icons.arrow_back;
+      iconColor = Colors.red;
+    } else {
+      // Default to a neutral arrow icon and color
+      icon = Icons.arrow_forward;
+      iconColor = Colors.black;
+    }
+    print('Title: $title');
+
     return Card(
       elevation: 4,
-      color: Colors.white,
-      shadowColor: Colors.grey.shade300,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(20.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 50,
               width: 50,
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: Colors.grey.shade300,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.arrow_forward,
+              child: Icon(
+                icon,
                 size: 30,
+                color: iconColor,
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(category),
-                Text(
-                  description,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Gap(4),
-                Text(
-                  date.toString(),
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
+            const Gap(20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                  const Gap(4),
+                  Text(
+                    description,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
+                  const Gap(4),
+                  Text(
+                    'Date: ${DateFormat('dd MMM yyyy').format(date)}',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    'Time: ${DateFormat('hh:mm a').format(date)}',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Text(amount.toString()),
+            Text(amount),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
-import 'package:expense_tracker/data/get_expense/repository/expenses_repository.dart';
+import 'package:expense_tracker/bloc/bloc/add_expense_bloc.dart';
+import 'package:expense_tracker/data/repository/expense_repository.dart';
 import 'package:expense_tracker/models/expense_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,7 @@ part 'expenses_event.dart';
 part 'expenses_state.dart';
 
 class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
-  final ExpensesRepository expensesRepository;
+  final ExpenseRepository expensesRepository;
   ExpensesBloc(this.expensesRepository) : super(ExpensesInitial()) {
     on<ExpensesFetched>((_getExpensesData));
   }

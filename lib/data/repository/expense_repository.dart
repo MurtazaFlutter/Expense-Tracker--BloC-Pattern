@@ -1,14 +1,22 @@
-import 'package:expense_tracker/data/get_expense/data_provider/expense_data_provider.dart';
+import 'package:expense_tracker/data/data_provider/expense_data_provider.dart';
 import 'package:expense_tracker/models/expense_model.dart';
 
-class ExpensesRepository {
-  final ExpensesDataProvider expensesDataProvider;
+class ExpenseRepository {
+  final ExpenseDataProvider expenseDataProvider;
 
-  ExpensesRepository(this.expensesDataProvider);
+  ExpenseRepository(this.expenseDataProvider);
+
+  Future addExpense(ExpenseModel expenseModel) async {
+    try {
+      expenseDataProvider.addExpense(expenseModel);
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 
   Future<List<ExpenseModel>> getExpensesData() async {
     try {
-      final expensesData = await expensesDataProvider.getExpenses();
+      final expensesData = await expenseDataProvider.getExpenses();
 
       // Assuming expensesData is a List<QueryDocumentSnapshot>
       final List<ExpenseModel> expenses = expensesData.map((snapshot) {
