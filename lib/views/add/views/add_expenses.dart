@@ -6,6 +6,7 @@ import 'package:expense_tracker/views/add/widgets/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+
 import '../widgets/custom_text_field.dart';
 
 class AddExpensesScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class AddExpensesScreen extends StatefulWidget {
 }
 
 class _AddExpensesScreenState extends State<AddExpensesScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController title = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController amountController = TextEditingController();
@@ -23,19 +25,45 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   final _formKey = GlobalKey<FormState>();
 
   void submit() async {
-    if (_formKey.currentState!.validate()) {
-      final expense = ExpenseModel(title.text, description.text, categoryValue!,
-          DateTime.now(), TimeOfDay.now(), amountController.text);
+    if (_formKey.currentState?.validate() ?? false) {
+      if (_areAllDetailsFilled()) {
+        final expense = ExpenseModel(
+            title.text,
+            description.text,
+            categoryValue!,
+            DateTime.now(),
+            TimeOfDay.now(),
+            amountController.text);
 
-      context.read<AddExpenseBloc>().add(AddExpenseEventWithModel(expense));
+        context.read<AddExpenseBloc>().add(AddExpenseEventWithModel(expense));
 
-      Navigator.of(context).pop(expense);
+        Navigator.of(context).pop(expense);
+      } else {
+        _showSnackbar("Please fill in all details");
+      }
     }
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  bool _areAllDetailsFilled() {
+    return title.text.isNotEmpty &&
+        description.text.isNotEmpty &&
+        categoryValue != null &&
+        amountController.text.isNotEmpty;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton: FloatingActionButton(
         onPressed: submit,
         child: const Icon(Icons.add),
@@ -51,8 +79,10 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                 const Gap(20),
                 CustomTextField(
                   validator: (value) {
-                    if (value!.length <= 30) {
-                      return 'Title can not be less than 30';
+                    if (value!.isEmpty) {
+                      return 'Title cannot be empty';
+                    } else if (value.length <= 30) {
+                      return 'Title must be at most 30 characters';
                     }
                   },
                   maxLines: 1,
@@ -62,8 +92,10 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                 const Gap(20),
                 CustomTextField(
                   validator: (value) {
-                    if (value!.length <= 100) {
-                      return 'Description can not be less than 100';
+                    if (value!.isEmpty) {
+                      return 'Descirpiton can be empty';
+                    } else if (value.length <= 100) {
+                      return 'Description must be at most 100 characters';
                     }
                   },
                   maxLines: 3,
@@ -71,15 +103,13 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                   hintText: 'Description',
                 ),
                 const Gap(20),
-                DateTimePicker(
+                const DateTimePicker(
                   icon: Icons.date_range,
-                  onTap: () {},
                   title: 'Date',
                 ),
                 const Gap(20),
-                DateTimePicker(
+                const DateTimePicker(
                   icon: Icons.alarm_add,
-                  onTap: () {},
                   title: 'Time',
                 ),
                 const Gap(20),

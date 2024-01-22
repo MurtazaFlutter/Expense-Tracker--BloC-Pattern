@@ -7,11 +7,9 @@ import 'package:intl/intl.dart';
 class DateTimePicker extends StatefulWidget {
   final IconData icon;
   final String title;
-  final VoidCallback onTap;
 
   const DateTimePicker({
     Key? key,
-    required this.onTap,
     required this.icon,
     required this.title,
   }) : super(key: key);

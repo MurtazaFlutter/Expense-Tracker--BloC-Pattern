@@ -76,8 +76,6 @@ class ExpenseTracker extends StatelessWidget {
                   const Gap(4),
                   Text(
                     description,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                   const Gap(4),
