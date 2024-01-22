@@ -51,9 +51,9 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                 const Gap(20),
                 CustomTextField(
                   validator: (value) {
-                    // if (value!.length <= 30) {
-                    //   return 'Title can be less than 30';
-                    // }
+                    if (value!.length <= 30) {
+                      return 'Title can not be less than 30';
+                    }
                   },
                   maxLines: 1,
                   controller: title,
@@ -62,9 +62,9 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                 const Gap(20),
                 CustomTextField(
                   validator: (value) {
-                    // if (value!.length <= 100) {
-                    //   return 'Description can be less than 100';
-                    // }
+                    if (value!.length <= 100) {
+                      return 'Description can not be less than 100';
+                    }
                   },
                   maxLines: 3,
                   controller: description,

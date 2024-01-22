@@ -1,4 +1,4 @@
-import 'package:expense_tracker/cubit/date_time_cubit.dart';
+import 'package:expense_tracker/bloc/date_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -21,42 +21,9 @@ class DateTimePicker extends StatefulWidget {
 }
 
 class ExpenseFlowState extends State<DateTimePicker> {
-  late DateTimeCubit _dateTimeCubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _dateTimeCubit = DateTimeCubit();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (pickedDate != null && pickedDate != _dateTimeCubit.state.selectedDate) {
-      _dateTimeCubit.updateDate(pickedDate);
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (pickedTime != null && pickedTime != _dateTimeCubit.state.selectedTime) {
-      _dateTimeCubit.updateTime(pickedTime);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DateTimeCubit, DateTimeState>(
-      bloc: _dateTimeCubit,
+    return BlocBuilder<DateTimeBloc, DateTimePickerState>(
       builder: (context, state) {
         return Row(
           children: [
@@ -91,9 +58,12 @@ class ExpenseFlowState extends State<DateTimePicker> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    child: Text(_getSelectedDateTime(state))),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
+                  child: Text(_getSelectedDateTime(state)),
+                ),
               ),
             ),
           ],
@@ -102,17 +72,47 @@ class ExpenseFlowState extends State<DateTimePicker> {
     );
   }
 
-  String _getSelectedDateTime(DateTimeState state) {
-    if (state.selectedDate != null && state.selectedTime != null) {
-      final formattedDate = DateFormat.yMd().format(state.selectedDate!);
-      final formattedTime = state.selectedTime!.format(context);
-      return '$formattedDate $formattedTime';
-    } else if (state.selectedDate != null) {
-      return DateFormat.yMd().format(state.selectedDate!);
-    } else if (state.selectedTime != null) {
-      return state.selectedTime!.format(context);
+  String _getSelectedDateTime(DateTimePickerState state) {
+    // Implement logic to format and display the selected date and time
+    if (widget.title == 'Date') {
+      return state.selectedDate != null
+          ? DateFormat('dd MMM yyyy').format(state.selectedDate!)
+          : 'Select Date';
+    } else if (widget.title == 'Time') {
+      return state.selectedTime != null
+          ? DateFormat('hh:mm a').format(
+              DateTime(0, 1, 1, state.selectedTime!.hour,
+                  state.selectedTime!.minute),
+            )
+          : 'Select Time';
     } else {
-      return widget.title;
+      return 'Invalid Type';
+    }
+  }
+
+  void _selectDate(BuildContext context) async {
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (selectedDate != null) {
+      if (!context.mounted) return;
+      context.read<DateTimeBloc>().add(SelectDateEvent(date: selectedDate));
+    }
+  }
+
+  void _selectTime(BuildContext context) async {
+    final selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (selectedTime != null) {
+      if (!context.mounted) return;
+      context.read<DateTimeBloc>().add(SelectTimeEvent(time: selectedTime));
     }
   }
 }

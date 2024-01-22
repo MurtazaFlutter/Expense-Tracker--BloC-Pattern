@@ -1,6 +1,6 @@
 import 'package:expense_tracker/bloc/bloc/add_expense_bloc.dart';
+import 'package:expense_tracker/bloc/date_bloc.dart';
 import 'package:expense_tracker/bloc/expenses_bloc.dart';
-import 'package:expense_tracker/cubit/date_time_cubit.dart';
 import 'package:expense_tracker/data/data_provider/expense_data_provider.dart';
 import 'package:expense_tracker/data/repository/expense_repository.dart';
 import 'package:expense_tracker/firebase_options.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => DateTimeCubit(),
+            create: (context) => DateTimeBloc(),
           ),
           BlocProvider(
             create: (context) =>
