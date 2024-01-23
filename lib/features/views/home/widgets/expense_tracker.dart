@@ -20,7 +20,6 @@ class ExpenseTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine arrow icon and color based on income or expense
     IconData icon;
     Color iconColor;
     if (category == 'Income') {
@@ -30,7 +29,6 @@ class ExpenseTracker extends StatelessWidget {
       icon = Icons.arrow_back;
       iconColor = Colors.red;
     } else {
-      // Default to a neutral arrow icon and color
       icon = Icons.arrow_forward;
       iconColor = Colors.black;
     }
