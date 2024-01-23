@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppConsts {
-  static final List<String> payNumbers = [
+  static const List<String> payNumbers = [
     '1',
     '2',
     '3',
@@ -14,7 +14,7 @@ class AppConsts {
     '0',
     'Delete'
   ];
-  static List<String> expenseCategory = ['Expense', 'Savings', 'Income'];
+  static const List<String> expenseCategory = ['Expense', 'Savings', 'Income'];
 
   static List<DropdownMenuItem<String>>? get expenseCategoryDropDown {
     List<DropdownMenuItem<String>>? menuItem =

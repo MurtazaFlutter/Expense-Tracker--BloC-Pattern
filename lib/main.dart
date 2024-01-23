@@ -1,10 +1,10 @@
-import 'package:expense_tracker/bloc/bloc/add_expense_bloc.dart';
-import 'package:expense_tracker/bloc/date_bloc.dart';
-import 'package:expense_tracker/bloc/expenses_bloc.dart';
 import 'package:expense_tracker/data/data_provider/expense_data_provider.dart';
 import 'package:expense_tracker/data/repository/expense_repository.dart';
+import 'package:expense_tracker/features/views/add/bloc/add_expense_bloc.dart';
+import 'package:expense_tracker/features/views/add/date_bloc/date_bloc.dart';
+import 'package:expense_tracker/features/views/home/bloc/expenses_bloc.dart';
+import 'package:expense_tracker/features/views/home/views/home.dart';
 import 'package:expense_tracker/firebase_options.dart';
-import 'package:expense_tracker/views/home/views/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

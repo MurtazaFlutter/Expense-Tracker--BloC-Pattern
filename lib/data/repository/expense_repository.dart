@@ -18,9 +18,7 @@ class ExpenseRepository {
     try {
       final expensesData = await expenseDataProvider.getExpenses();
 
-      // Assuming expensesData is a List<QueryDocumentSnapshot>
       final List<ExpenseModel> expenses = expensesData.map((snapshot) {
-        // Convert each snapshot to a Map<String, dynamic> and then to ExpenseModel
         return ExpenseModel.fromJson(snapshot.data());
       }).toList();
 

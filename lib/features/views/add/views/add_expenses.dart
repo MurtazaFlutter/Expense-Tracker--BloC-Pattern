@@ -1,8 +1,9 @@
-import 'package:expense_tracker/bloc/bloc/add_expense_bloc.dart';
-import 'package:expense_tracker/common/utils/app_consts.dart';
+import 'package:expense_tracker/common/utils/app_utils.dart';
+import 'package:expense_tracker/features/views/add/bloc/add_expense_bloc.dart';
+import 'package:expense_tracker/features/views/add/widgets/amount_field.dart';
+import 'package:expense_tracker/features/views/add/widgets/dialer_button.dart';
+import 'package:expense_tracker/features/views/add/widgets/expense.dart';
 import 'package:expense_tracker/models/expense_model.dart';
-import 'package:expense_tracker/views/add/widgets/dialer_button.dart';
-import 'package:expense_tracker/views/add/widgets/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -21,7 +22,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   final TextEditingController title = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController amountController = TextEditingController();
-  String? categoryValue;
+  String categoryValue = 'Expense';
   final _formKey = GlobalKey<FormState>();
 
   void submit() async {
@@ -30,7 +31,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
         final expense = ExpenseModel(
             title.text,
             description.text,
-            categoryValue!,
+            categoryValue,
             DateTime.now(),
             TimeOfDay.now(),
             amountController.text);
@@ -56,7 +57,6 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   bool _areAllDetailsFilled() {
     return title.text.isNotEmpty &&
         description.text.isNotEmpty &&
-        categoryValue != null &&
         amountController.text.isNotEmpty;
   }
 
@@ -125,13 +125,13 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(categoryValue ?? 'Expense'),
+                        Text(categoryValue),
                         DropdownButton(
                           style: const TextStyle(color: Colors.black),
                           items: AppConsts.expenseCategoryDropDown,
                           onChanged: (String? value) {
                             setState(() {
-                              categoryValue = value;
+                              categoryValue = value!;
                             });
                           },
                         ),
@@ -140,25 +140,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                   ),
                 ),
                 const Gap(10),
-                Container(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextFormField(
-                      controller: amountController,
-                      enabled: false,
-                      decoration: const InputDecoration(
-                        hintText: 'Amount',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
+                AmountField(amountController: amountController),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: GridView.builder(
