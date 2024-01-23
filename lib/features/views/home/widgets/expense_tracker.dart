@@ -32,7 +32,6 @@ class ExpenseTracker extends StatelessWidget {
       icon = Icons.arrow_forward;
       iconColor = Colors.black;
     }
-    print('Title: $title');
 
     return Card(
       elevation: 4,
